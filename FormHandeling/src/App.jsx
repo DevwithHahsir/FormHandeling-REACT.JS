@@ -2,6 +2,7 @@
 /*Deslint-disableDno-unused-varsD*/
 import { useState } from "react";
 import "./index.css";
+import "./APP.css"
 import { useForm } from "react-hook-form"; // LIBRARAY DOWNLOAND FROM WEBSITE
 
 function App() {
@@ -27,23 +28,23 @@ function App() {
   };
 
   const onSubmit = async (data) => {
-    // await delay(2);
-    let response = await fetch("http://localhost:3000/",{method:"POST"});
-    let getResponse= await response.text()
-    console.log(data,getResponse);
+    await delay(2);
+    // let response = await fetch("http://localhost:3000/",{method:"POST"});
+    // let getResponse= await response.text()
+    // console.log(data,getResponse);
     
 
 
     // this will genrate custom erorrs
 
-  //          if(data.fname !== "Hashir")
-  //          {
-  //           setError("nameErorr",{message:"User Name is Incorrect"})
-  //          }
-  //          if(data.fname === "Hasnat")
-  //          {
-  //           setError("blocked",{message:"Thius iuser is blocked"})
-  //          }
+           if(data.fname !== "Hashir")
+           {
+            setError("nameErorr",{message:"User Name is Incorrect"})
+           }
+           if(data.fname === "Hasnat")
+           {
+            setError("blocked",{message:"Thius iuser is blocked"})
+           }
   };
 
   // const [ChangeInput, SetChangeInput] = useState([]);
@@ -62,6 +63,7 @@ function App() {
   return (
     <>
       <h1>Enter your details</h1>
+      <h6>Form Handeling with Backend</h6>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="name-container">
           <div className="fname">
@@ -76,7 +78,7 @@ function App() {
               })}
               placeholder="First Name"
             />
-            {errors.fname && <div>{errors.fname.message}</div>}
+            {errors.fname && <div className="red">{errors.fname.message}</div>}
           </div>
 
           <div className="lname">
@@ -93,8 +95,8 @@ function App() {
           <button disabled={isSubmitting}> Submitt</button>
           {isSubmitting && <div>Loading...</div>}
           {/* this will print custom erorr */}
-          {errors.nameErorr && <div>{errors.nameErorr.message}</div>}
-          {errors.blocked && <div>{errors.blocked.message}</div>}  
+          {errors.nameErorr && <div className="red">{errors.nameErorr.message}</div>}
+          {errors.blocked && <div className="red">{errors.blocked.message}</div>}  
         </div>
       </form>
     </>
