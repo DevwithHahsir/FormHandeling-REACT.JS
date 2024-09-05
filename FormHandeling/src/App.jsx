@@ -1,46 +1,100 @@
+/* eslint-disable no-unused-vars */
 /*Deslint-disableDno-unused-varsD*/
 import { useState } from "react";
 import "./index.css";
+import { useForm } from "react-hook-form"; // LIBRARAY DOWNLOAND FROM WEBSITE
+
 function App() {
-  const [ChangeInput, SetChangeInput] = useState([]);
+  // COPY FROM WEB SITE
+  const {
+    register,
+    handleSubmit,
+    setError,   // use to make custom erorrs
+    watch,
+    formState: { errors,isSubmitting },
+  } = useForm();
 
-  const HandelChange = (e) => {
-    SetChangeInput({ ...ChangeInput, [e.target.name]: e.target.value });
-    console.log(ChangeInput);
+
+
+
+
+  const delay = (time) => {
+    return new Promise((res, rej) => {
+      setTimeout(() => {
+        res();
+      }, time * 1000);
+    });
   };
 
-  const HandleSubmitt = () => {
-    const dataToSave = JSON.stringify(ChangeInput); // Convert object to JSON string
-    localStorage.setItem("formData", dataToSave); // Store data with a key "formData"
-    console.log(dataToSave); // Optional: Log the saved data for verification
+  const onSubmit = async (data) => {
+    // await delay(2);
+    let response = await fetch("http://localhost:3000/",{method:"POST"});
+    let getResponse= await response.text()
+    console.log(data,getResponse);
+    
+
+
+    // this will genrate custom erorrs
+
+  //          if(data.fname !== "Hashir")
+  //          {
+  //           setError("nameErorr",{message:"User Name is Incorrect"})
+  //          }
+  //          if(data.fname === "Hasnat")
+  //          {
+  //           setError("blocked",{message:"Thius iuser is blocked"})
+  //          }
   };
+
+  // const [ChangeInput, SetChangeInput] = useState([]);
+
+  // const HandelChange = (e) => {
+  //   SetChangeInput({ ...ChangeInput, [e.target.name]: e.target.value });
+  //   console.log(ChangeInput);
+  // };
+
+  // const HandleSubmitt = () => {
+  //   const dataToSave = JSON.stringify(ChangeInput); // Convert object to JSON string
+  //   localStorage.setItem("formData", dataToSave); // Store data with a key "formData"
+  //   console.log(dataToSave); // Optional: Log the saved data for verification
+  // };
 
   return (
     <>
-
-    <h1>Enter your details</h1>
-      <form action="">
+      <h1>Enter your details</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="name-container">
           <div className="fname">
-            <input type="text" name="fname" id="" onChange={HandelChange} />
+            <input
+              {...register("fname", {
+                required: true,
+                minLength: { value: 3, message: "Enter more then 3 word" },
+                maxLength: {
+                  value: 10,
+                  message: "User Name should be Less then 10 words",
+                },
+              })}
+              placeholder="First Name"
+            />
+            {errors.fname && <div>{errors.fname.message}</div>}
           </div>
 
           <div className="lname">
-            <input type="text" name="lname" id="" onChange={HandelChange} />
+            <input {...register("lname")} placeholder="Last Name" />
           </div>
 
           <div className="email">
-            <input type="email" name="email" id="" onChange={HandelChange} />
+            <input {...register("email")} placeholder="Email" />
           </div>
+
           <div className="password">
-            <input
-              type="password"
-              name="password"
-              id=""
-              onChange={HandelChange}
-            />
+            <input {...register("password")} placeholder="Password" />
           </div>
-          <button onClick={HandleSubmitt}> Submitt</button>
+          <button disabled={isSubmitting}> Submitt</button>
+          {isSubmitting && <div>Loading...</div>}
+          {/* this will print custom erorr */}
+          {errors.nameErorr && <div>{errors.nameErorr.message}</div>}
+          {errors.blocked && <div>{errors.blocked.message}</div>}  
         </div>
       </form>
     </>
